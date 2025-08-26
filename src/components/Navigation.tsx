@@ -3,6 +3,7 @@ import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
 import { Wifi, Battery, Thermometer, Radio, HardDrive } from "lucide-react";
 import { useState, useEffect } from "react";
+import EchoLogo from "../assets/echo-logo.svg";
 
 export function Navigation() {
   const [batteryLevel, setBatteryLevel] = useState(85);
@@ -35,8 +36,8 @@ export function Navigation() {
     <header className="w-full h-16 bg-card border-b border-border flex items-center justify-between px-6">
       {/* Logo */}
       <div className="flex items-center space-x-4">
-        <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center relative">
-          <span className="text-primary-foreground font-bold text-lg">E</span>
+        <div className="w-10 h-10 flex items-center justify-center relative">
+          <img src={EchoLogo} alt="ECHO Logo" className="w-10 h-10" />
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
         <div>
