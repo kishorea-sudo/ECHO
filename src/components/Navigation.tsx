@@ -1,11 +1,15 @@
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
-import { Wifi, Battery, Thermometer, Radio, HardDrive } from "lucide-react";
+import { Battery, Thermometer, Radio, HardDrive, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import EchoLogo from "../assets/echo-logo.svg";
 
-export function Navigation() {
+interface NavigationProps {
+  onLogout?: () => void;
+}
+
+export function Navigation({ onLogout }: NavigationProps) {
   const [batteryLevel, setBatteryLevel] = useState(85);
   const [signalStrength, setSignalStrength] = useState(4);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -62,7 +66,7 @@ export function Navigation() {
 
         {/* Battery Status */}
         <div className="flex items-center space-x-2">
-          <Battery className={`w-4 h-4 ${getBatteryColor()}`} />
+          <Battery className={`w-5 h-5 ${getBatteryColor()}`} />
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">Battery</span>
             <div className="flex items-center space-x-2">
@@ -115,6 +119,19 @@ export function Navigation() {
             </span>
           </div>
         </div>
+
+        {/* Logout Button */}
+        {onLogout && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onLogout}
+            className="border-red-500 text-red-500 hover:bg-red-500/10"
+          >
+            <LogOut className="w-4 h-4 mr-1" />
+            Logout
+          </Button>
+        )}
       </div>
     </header>
   );

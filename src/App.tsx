@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigation } from "./components/Navigation";
 import { Sidebar } from "./components/Sidebar";
 import { Dashboard } from "./components/Dashboard";
@@ -8,9 +8,35 @@ import { EnhancedControlPanel } from "./components/EnhancedControlPanel";
 import { AnalyticsPanel } from "./components/AnalyticsPanel";
 import { AlertsPanel } from "./components/AlertsPanel";
 import { MapPanel } from "./components/MapPanel";
+import { AdminLogin } from "./components/AdminLogin";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check for existing authentication on app load
+  useEffect(() => {
+    const authStatus = localStorage.getItem("echoAdminAuth");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (success: boolean) => {
+    if (success) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("echoAdminAuth");
+    setIsAuthenticated(false);
+  };
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={handleLogin} />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -159,7 +185,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background dark">
       {/* Top Navigation */}
-      <Navigation />
+      <Navigation onLogout={handleLogout} />
       
       {/* Main Layout */}
       <div className="flex h-[calc(100vh-4rem)]">
