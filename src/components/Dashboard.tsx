@@ -34,19 +34,23 @@ export function Dashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Main 4-Panel Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-12rem)]">
+    <div className="p-4 lg:p-6 space-y-4 lg:space-y-6">
+      {/* Main Grid - Mobile: Stack vertically, Desktop: 2x2 grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 min-h-[calc(100vh-8rem)] lg:h-[calc(100vh-12rem)]">
         {/* Panel 1: Map */}
-        <MapPanel />
+        <div className="order-1 lg:order-1">
+          <MapPanel />
+        </div>
         
         {/* Panel 2: Camera */}
-        <CameraPanel />
+        <div className="order-2 lg:order-2">
+          <CameraPanel />
+        </div>
         
         {/* Panel 3: Sensors (combined into one panel) */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-[#00ffff] text-glow-cyan">Water Quality Sensors</h3>
-          <div className="grid grid-cols-1 gap-4">
+        <div className="order-4 lg:order-3 space-y-4">
+          <h3 className="text-base lg:text-lg font-medium text-[#00ffff] text-glow-cyan">Water Quality Sensors</h3>
+          <div className="grid grid-cols-1 gap-3 lg:gap-4">
             <SensorCard
               title="pH Level"
               value={sensorData.ph.value}
@@ -88,7 +92,9 @@ export function Dashboard() {
         </div>
         
         {/* Panel 4: Controls */}
-        <ControlPanel />
+        <div className="order-3 lg:order-4">
+          <ControlPanel />
+        </div>
       </div>
     </div>
   );

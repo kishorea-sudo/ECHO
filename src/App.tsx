@@ -220,15 +220,23 @@ export default function App() {
       
       {/* Main Layout */}
       <div className="flex h-[calc(100vh-4rem)]">
-        {/* Sidebar - conditionally rendered */}
+        {/* Sidebar - conditionally rendered with mobile overlay */}
         {sidebarOpen && (
-          <div className="w-64 bg-card border-r border-border transition-all duration-300 ease-in-out">
-            <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+          <div className="fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto">
+            {/* Mobile backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/50 lg:hidden" 
+              onClick={toggleSidebar}
+            />
+            {/* Sidebar content */}
+            <div className="relative w-64 h-full bg-card border-r border-border transition-all duration-300 ease-in-out lg:w-64">
+              <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+            </div>
           </div>
         )}
         
         {/* Main Content */}
-        <main className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-0' : 'ml-0'}`}>
+        <main className="flex-1 overflow-y-auto lg:ml-0">
           {renderContent()}
         </main>
       </div>

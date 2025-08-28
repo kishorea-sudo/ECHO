@@ -48,16 +48,16 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 shadow-2xl">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-            <img src={EchoLogo} alt="ECHO Logo" className="w-16 h-16" />
+      <Card className="w-full max-w-sm lg:max-w-md p-6 lg:p-8 shadow-2xl">
+        <div className="text-center mb-6 lg:mb-8">
+          <div className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center mx-auto mb-4">
+            <img src={EchoLogo} alt="ECHO Logo" className="w-12 h-12 lg:w-16 lg:h-16" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">ECHO Admin</h1>
-          <p className="text-muted-foreground mt-2">Smart Harvester Control System</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-foreground">ECHO Admin</h1>
+          <p className="text-sm lg:text-base text-muted-foreground mt-2">Smart Harvester Control System</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
