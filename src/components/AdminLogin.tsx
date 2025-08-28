@@ -4,38 +4,42 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Alert, AlertDescription } from "./ui/alert";
-import { Lock, User, Eye, EyeOff } from "lucide-react";
+import { Lock, User, Eye, EyeOff, Mail } from "lucide-react";
+import EchoLogo from "../assets/echo-logo.svg";
+import { supabase } from "../lib/supabase";
 
 interface AdminLoginProps {
   onLogin: (success: boolean) => void;
 }
 
 export function AdminLogin({ onLogin }: AdminLoginProps) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  // Simple admin credentials (in production, this should be handled by a proper backend)
-  const ADMIN_CREDENTIALS = {
-    username: "admin",
-    password: "echo2025"
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
 
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      localStorage.setItem("echoAdminAuth", "true");
-      onLogin(true);
-    } else {
-      setError("Invalid username or password");
+      if (error) {
+        setError(error.message);
+        onLogin(false);
+      } else if (data.user) {
+        // Store auth session
+        localStorage.setItem("echoAdminAuth", "true");
+        onLogin(true);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
       onLogin(false);
     }
 
@@ -46,8 +50,8 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 shadow-2xl">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-primary-foreground" />
+          <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <img src={EchoLogo} alt="ECHO Logo" className="w-16 h-16" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">ECHO Admin</h1>
           <p className="text-muted-foreground mt-2">Smart Harvester Control System</p>
@@ -55,15 +59,15 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                id="username"
-                type="text"
-                placeholder="Enter admin username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
                 required
               />
@@ -77,7 +81,7 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter admin password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 pr-10"
@@ -105,9 +109,6 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Demo credentials: admin / echo2025
-          </p>
         </div>
       </Card>
     </div>

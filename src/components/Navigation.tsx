@@ -1,18 +1,20 @@
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
-import { Battery, Thermometer, Radio, HardDrive, LogOut } from "lucide-react";
+import { Battery, Thermometer, Radio, HardDrive, LogOut, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import EchoLogo from "../assets/echo-logo.svg";
 
 interface NavigationProps {
   onLogout?: () => void;
+  onToggleSidebar?: () => void;
 }
 
-export function Navigation({ onLogout }: NavigationProps) {
+export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
   const [batteryLevel, setBatteryLevel] = useState(85);
   const [signalStrength, setSignalStrength] = useState(4);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isHamburgerHovered, setIsHamburgerHovered] = useState(false);
 
   // Update time every second
   useEffect(() => {
@@ -38,18 +40,36 @@ export function Navigation({ onLogout }: NavigationProps) {
   
   return (
     <header className="w-full h-16 bg-card border-b border-border flex items-center justify-between px-6">
-      {/* Logo */}
+      {/* Left Section: Hamburger Menu + Logo */}
       <div className="flex items-center space-x-4">
-        <div className="w-10 h-10 flex items-center justify-center relative">
-          <img src={EchoLogo} alt="ECHO Logo" className="w-10 h-10" />
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
-        </div>
-        <div>
-          <span className="text-xl font-bold text-foreground">
-            ECHO
-          </span>
-          <div className="text-xs text-muted-foreground">
-            Smart Harvester Control System
+        {/* Hamburger Menu Button */}
+        {onToggleSidebar && (
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={onToggleSidebar}
+            onMouseEnter={() => setIsHamburgerHovered(true)}
+            onMouseLeave={() => setIsHamburgerHovered(false)}
+            className="p-4 hover:bg-sidebar-accent transition-colors duration-200"
+            style={{ color: isHamburgerHovered ? '#3b82f6' : 'white' }}
+          >
+            <Menu className="w-8 h-8" style={{ width: '32px', height: '32px' }} />
+          </Button>
+        )}
+        
+        {/* Logo */}
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 flex items-center justify-center relative">
+            <img src={EchoLogo} alt="ECHO Logo" className="w-10 h-10" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+          <div>
+            <span className="text-xl font-bold text-foreground">
+              ECHO
+            </span>
+            <div className="text-xs text-muted-foreground">
+              Smart Harvester Control System
+            </div>
           </div>
         </div>
       </div>

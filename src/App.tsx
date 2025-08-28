@@ -9,17 +9,39 @@ import { AnalyticsPanel } from "./components/AnalyticsPanel";
 import { AlertsPanel } from "./components/AlertsPanel";
 import { MapPanel } from "./components/MapPanel";
 import { AdminLogin } from "./components/AdminLogin";
+import { supabase } from "./lib/supabase";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check for existing authentication on app load
   useEffect(() => {
-    const authStatus = localStorage.getItem("echoAdminAuth");
-    if (authStatus === "true") {
-      setIsAuthenticated(true);
-    }
+    // Check Supabase session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsAuthenticated(true);
+      } else {
+        // Fallback to localStorage for backwards compatibility
+        const authStatus = localStorage.getItem("echoAdminAuth");
+        if (authStatus === "true") {
+          setIsAuthenticated(true);
+        }
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        setIsAuthenticated(true);
+      } else if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        localStorage.removeItem("echoAdminAuth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleLogin = (success: boolean) => {
@@ -28,9 +50,18 @@ export default function App() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Sign out from Supabase
+    await supabase.auth.signOut();
+    
+    // Clear localStorage for backwards compatibility
     localStorage.removeItem("echoAdminAuth");
     setIsAuthenticated(false);
+    setActiveTab("dashboard");
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
   // Show login screen if not authenticated
@@ -185,15 +216,19 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background dark">
       {/* Top Navigation */}
-      <Navigation onLogout={handleLogout} />
+      <Navigation onLogout={handleLogout} onToggleSidebar={toggleSidebar} />
       
       {/* Main Layout */}
       <div className="flex h-[calc(100vh-4rem)]">
-        {/* Sidebar */}
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Sidebar - conditionally rendered */}
+        {sidebarOpen && (
+          <div className="w-64 bg-card border-r border-border transition-all duration-300 ease-in-out">
+            <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+          </div>
+        )}
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-0' : 'ml-0'}`}>
           {renderContent()}
         </main>
       </div>
