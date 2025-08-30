@@ -39,9 +39,9 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
 
   
   return (
-    <header className="w-full h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6">
+    <header className="w-full h-16 bg-card border-b border-border flex items-center justify-between px-6">
       {/* Left Section: Hamburger Menu + Logo */}
-      <div className="flex items-center space-x-2 lg:space-x-4">
+      <div className="flex items-center space-x-4">
         {/* Hamburger Menu Button */}
         {onToggleSidebar && (
           <Button
@@ -50,21 +50,21 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
             onClick={onToggleSidebar}
             onMouseEnter={() => setIsHamburgerHovered(true)}
             onMouseLeave={() => setIsHamburgerHovered(false)}
-            className="p-2 lg:p-4 hover:bg-sidebar-accent transition-colors duration-200"
+            className="p-4 hover:bg-sidebar-accent transition-colors duration-200"
             style={{ color: isHamburgerHovered ? '#3b82f6' : 'white' }}
           >
-            <Menu className="w-6 h-6 lg:w-8 lg:h-8" style={{ width: '24px', height: '24px' }} />
+            <Menu className="w-8 h-8" style={{ width: '32px', height: '32px' }} />
           </Button>
         )}
         
         {/* Logo */}
-        <div className="flex items-center space-x-2 lg:space-x-4">
-          <div className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center relative">
-            <img src={EchoLogo} alt="ECHO Logo" className="w-8 h-8 lg:w-10 lg:h-10" />
-            <div className="absolute -top-1 -right-1 w-2 h-2 lg:w-3 lg:h-3 bg-green-500 rounded-full"></div>
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 flex items-center justify-center relative">
+            <img src={EchoLogo} alt="ECHO Logo" className="w-10 h-10" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
-          <div className="hidden sm:block">
-            <span className="text-lg lg:text-xl font-bold text-foreground">
+          <div>
+            <span className="text-xl font-bold text-foreground">
               ECHO
             </span>
             <div className="text-xs text-muted-foreground">
@@ -75,9 +75,9 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
       </div>
 
       {/* System Status */}
-      <div className="flex items-center space-x-2 lg:space-x-6">
+      <div className="flex items-center space-x-6">
         {/* Current Time */}
-        <div className="hidden lg:flex flex-col items-center">
+        <div className="hidden md:flex flex-col items-center">
           <span className="text-xs text-muted-foreground">System Time</span>
           <span className="text-sm text-foreground font-mono">
             {currentTime.toLocaleTimeString()}
@@ -85,12 +85,12 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
         </div>
 
         {/* Battery Status */}
-        <div className="hidden md:flex items-center space-x-2">
-          <Battery className={`w-4 h-4 lg:w-5 lg:h-5 ${getBatteryColor()}`} />
+        <div className="flex items-center space-x-2">
+          <Battery className={`w-5 h-5 ${getBatteryColor()}`} />
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">Battery</span>
             <div className="flex items-center space-x-2">
-              <Progress value={batteryLevel} className="w-12 lg:w-16 h-2" />
+              <Progress value={batteryLevel} className="w-16 h-2" />
               <span className={`text-sm ${getBatteryColor()}`}>
                 {batteryLevel.toFixed(0)}%
               </span>
@@ -99,7 +99,7 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
         </div>
 
         {/* LTE Signal */}
-        <div className="hidden md:flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <div className="flex space-x-1">
             {[1, 2, 3, 4, 5].map((bar) => (
               <div
@@ -118,20 +118,19 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
             </span>
           </div>
         </div>
-        
         {/* Emergency RF Mode */}
         <Button
           variant="outline"
           size="sm"
-          className="border-orange-500 text-orange-500 hover:bg-orange-500/10 relative hidden lg:flex"
+          className="border-orange-500 text-orange-500 hover:bg-orange-500/10 relative"
         >
-          <Radio className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-          <span className="hidden lg:inline">RF STANDBY</span>
+          <Radio className="w-4 h-4 mr-1" />
+          RF STANDBY
           <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full"></div>
         </Button>
 
         {/* Connection Status */}
-        <div className="hidden lg:flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           <div className="flex flex-col">
             <span className="text-sm text-green-500 font-medium">ONLINE</span>
@@ -139,12 +138,6 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
               12ms RTT
             </span>
           </div>
-        </div>
-
-        {/* Mobile Status Indicator */}
-        <div className="flex lg:hidden items-center space-x-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <span className="text-xs text-green-500">ONLINE</span>
         </div>
 
         {/* Logout Button */}
@@ -155,8 +148,8 @@ export function Navigation({ onLogout, onToggleSidebar }: NavigationProps) {
             onClick={onLogout}
             className="border-red-500 text-red-500 hover:bg-red-500/10"
           >
-            <LogOut className="w-3 h-3 lg:w-4 lg:h-4 lg:mr-1" />
-            <span className="hidden lg:inline">Logout</span>
+            <LogOut className="w-4 h-4 mr-1" />
+            Logout
           </Button>
         )}
       </div>
